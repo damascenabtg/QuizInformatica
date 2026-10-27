@@ -1,0 +1,22 @@
+[
+  {
+    "nome": "joão",
+    "turma": "2A",
+    "pontos": 11588,
+    "acertos": 14,
+    "total": 15,
+    "tempoTotal": 101.61,
+    "dicasUsadas": 3,
+    "data": "2026-10-23T13:58:06.274Z"
+  },
+  {
+    "nome": "vitor henrique",
+    "turma": "2 a",
+    "pontos": 10650,
+    "acertos": 12,
+    "total": 15,
+    "tempoTotal": 92.341,
+    "dicasUsadas": 1,
+    "data": "2026-10-23T14:03:01.619Z"
+  }
+]

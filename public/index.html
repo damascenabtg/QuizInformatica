@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz de Informática</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <!-- Camada dos confetes e do brilho ao acertar (cobre a tela toda) -->
+  <canvas id="confete"></canvas>
+  <div id="brilho" class="brilho"></div>
+
+  <!-- Botão de tela cheia -->
+  <button id="btn-tela-cheia" class="btn-tela-cheia" title="Tela cheia">⛶</button>
+
+  <!-- Aba de dicas (lâmpada) -->
+  <div id="aba-dica" class="aba-dica oculto">
+    <button id="btn-dica" class="btn-dica" title="Pedir uma dica">
+      <span class="lampada">💡</span>
+      <span class="badge" id="dicas-restantes">3</span>
+    </button>
+    <div id="painel-dica" class="painel-dica">
+      <div class="painel-titulo">💡 Dica</div>
+      <div id="texto-dica"></div>
+    </div>
+  </div>
+
+  <main class="container">
+
+    <!-- Tela 1: cadastro -->
+    <section id="tela-inicio">
+      <div class="logo">💻</div>
+      <h1>Quiz de Informática Básica</h1>
+      <p class="sub">Hardware · Software · Memória · Armazenamento local e em nuvem</p>
+      <form class="card" id="form-inicio">
+        <label for="nome">Seu nome</label>
+        <input id="nome" maxlength="30" autocomplete="off" placeholder="Ex.: Maria Silva" required>
+        <label for="turma">Turma (opcional)</label>
+        <input id="turma" maxlength="20" autocomplete="off" placeholder="Ex.: 1º A">
+        <div class="regras">
+          📝 <b>15 questões</b> de múltipla escolha<br>
+          ⏱️ <b>20 segundos</b> para cada questão<br>
+          ⚡ Quanto <b>mais rápido</b> acertar, mais pontos (até 1000 por questão)<br>
+          🔥 <b>+100 de bônus</b> por acertos seguidos<br>
+          💡 <b>3 dicas</b> na lâmpada do canto da tela (a questão com dica vale metade dos pontos)<br>
+          🏆 Empate nos pontos? Ganha quem terminou em <b>menos tempo</b>
+        </div>
+        <button class="btn" type="submit">Começar quiz</button>
+        <p class="erro" id="erro-inicio"></p>
+        <a class="btn sec" href="/ranking">Ver ranking</a>
+      </form>
+    </section>
+
+    <!-- Tela 2: perguntas -->
+    <section id="tela-quiz" class="oculto">
+      <div class="topo">
+        <span class="chip" id="contador">Questão 1/15</span>
+        <span class="chip pts" id="placar">⭐ 0 pts</span>
+      </div>
+      <div class="barra-prog"><div id="progresso" style="width:0%"></div></div>
+      <div class="card" id="card-pergunta">
+        <div class="timer-wrap">
+          <div class="timer-barra"><div id="timer-barra" style="width:100%"></div></div>
+          <span class="timer-num" id="timer-num">20</span>
+        </div>
+        <div class="categoria" id="categoria"></div>
+        <div class="pergunta" id="pergunta"></div>
+        <div class="opcoes" id="opcoes"></div>
+        <div id="feedback"></div>
+      </div>
+    </section>
+
+    <!-- Tela 3: resultado -->
+    <section id="tela-fim" class="oculto">
+      <div class="card resultado">
+        <div class="logo" id="fim-emoji">🏆</div>
+        <h1 id="fim-titulo">Parabéns!</h1>
+        <div class="grande" id="fim-pontos">0</div>
+        <div class="sub" style="margin:0">pontos</div>
+        <div class="stats">
+          <div class="stat"><b id="fim-posicao">-</b><span>posição</span></div>
+          <div class="stat"><b id="fim-acertos">-</b><span>acertos</span></div>
+          <div class="stat"><b id="fim-tempo">-</b><span>tempo total</span></div>
+        </div>
+
+        <div class="analise">
+          <h2>📊 Seu desempenho por conteúdo</h2>
+          <p id="fim-descricao" class="descricao"></p>
+          <div id="fim-categorias" class="categorias"></div>
+          <details class="detalhes">
+            <summary>Ver todas as questões</summary>
+            <ul id="fim-questoes"></ul>
+          </details>
+        </div>
+
+        <a class="btn" id="link-ranking" href="/ranking">Ver ranking</a>
+        <button class="btn sec" onclick="location.reload()">Jogar novamente</button>
+      </div>
+    </section>
+
+  </main>
+  <script src="/util.js"></script>
+  <script src="/confete.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ranking do Quiz</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="container">
+    <div class="logo">🏆</div>
+    <h1>Ranking</h1>
+    <p class="sub">Quiz de Informática Básica</p>
+    <p class="info-ao-vivo"><span class="ponto-vivo"></span>Ao vivo · <span id="jogando">0</span> aluno(s) jogando agora</p>
+
+    <div id="podio" class="podio"></div>
+
+    <div class="card">
+      <table class="tabela">
+        <thead>
+          <tr><th>#</th><th>Aluno</th><th class="num">Acertos</th><th class="num">Tempo</th><th class="num">Pontos</th></tr>
+        </thead>
+        <tbody id="linhas"></tbody>
+      </table>
+      <div id="vazio" class="vazio oculto">Ninguém jogou ainda. Seja o primeiro! 🚀</div>
+    </div>
+
+    <div class="rodape">
+      <a class="btn" href="/">Jogar</a>
+      <button class="btn sec" id="btn-zerar">Zerar ranking (professor)</button>
+    </div>
+  </main>
+
+  <script src="/util.js"></script>
+  <script>
+    const destaque = new URLSearchParams(location.search).get("destaque");
+
+    function esc(s) {
+      const d = document.createElement("div");
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    async function atualizar() {
+      try {
+        const r = await fetch("/api/ranking").then((x) => x.json());
+        document.getElementById("jogando").textContent = r.jogando;
+        const lista = r.ranking;
+        document.getElementById("vazio").classList.toggle("oculto", lista.length > 0);
+
+        // Pódio (ordem visual: 2º, 1º, 3º)
+        const podio = [[1, "d2"], [0, "d1"], [2, "d3"]]
+          .filter(([i]) => lista[i])
+          .map(([i, cls]) => `
+            <div class="degrau ${cls}">
+              <div class="n">${esc(lista[i].nome)}</div>
+              <div class="p">${lista[i].pontos} pts</div>
+              <div class="bloco">${i + 1}º</div>
+            </div>`).join("");
+        document.getElementById("podio").innerHTML = podio;
+
+        document.getElementById("linhas").innerHTML = lista.map((a, i) => `
+          <tr class="p${i + 1} ${a.data === destaque ? "eu" : ""}">
+            <td class="pos">${i + 1}º</td>
+            <td class="nome-turma">${esc(a.nome)}${a.turma ? `<small>${esc(a.turma)}</small>` : ""}</td>
+            <td class="num">${a.acertos}/${a.total}</td>
+            <td class="num">${formatarTempo(a.tempoTotal)}</td>
+            <td class="num"><b>${a.pontos}</b></td>
+          </tr>`).join("");
+      } catch {
+        /* servidor fora do ar: tenta de novo no próximo ciclo */
+      }
+    }
+
+    document.getElementById("btn-zerar").onclick = async () => {
+      const senha = prompt("Senha do professor:");
+      if (!senha) return;
+      const r = await fetch("/api/resetar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ senha })
+      });
+      alert(r.ok ? "Ranking zerado!" : "Senha incorreta.");
+      atualizar();
+    };
+
+    atualizar();
+    setInterval(atualizar, 3000);
+  </script>
+</body>
+</html>
