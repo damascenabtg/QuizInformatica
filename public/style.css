@@ -29,7 +29,12 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 24px 16px;
+  /* Modo exposição: sem seleção de texto nem zoom por pinça */
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
 }
+input, textarea { user-select: text; -webkit-user-select: text; }
 
 .container { width: 100%; max-width: 760px; }
 .oculto { display: none !important; }
